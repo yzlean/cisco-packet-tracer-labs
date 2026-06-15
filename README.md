@@ -10,6 +10,7 @@ A collection of progressively advanced networking labs built in Cisco Packet Tra
 | **Secure SOHO** | Wireless, DHCP | June 2026 | [View](images/secure-soho-topology.png) |
 | **Enterprise Gateway** | Default Gateways, L3 Routing | June 2026 | [View](images/enterprise-gateway-topology.png) |
 | **Enterprise LAN/WAN** | ISP Connectivity, Public Routing | June 2026 | [View](images/enterprise-lan-wan-topology.png) |
+| **VLAN Segmentation** | Broadcast Domains, L2 Isolation | June 2026 | [View](images/vlan-segmentation-topology.png) |
 
 ---
 
@@ -46,13 +47,37 @@ This project expanded the local corporate network into a routed WAN environment,
 
 ---
 
+## Lab Spotlight: Department Segmentation with VLANs
+
+### Overview
+This project addresses a flat corporate network domain by engineering Layer 2 network segmentation. By creating dedicated virtual local area networks (VLANs), department broadcast traffic is completely contained, mitigating security vulnerabilities and performance bottlenecks.
+
+### Technologies Used
+- Cisco Catalyst 2960 Layer 2 Switch
+- Logical Segmentation (802.1Q VLAN Mapping)
+- Broadcast Domain Isolation
+
+### Verification
+
+#### CORE-SWITCH
+* **VLAN Database Initialization:** ![VLAN Brief Initial](images/vlan-brief.png)
+  *Confirmed the successful creation and activation of VLANs 10, 20, 30, and 99 within the switch database before port allocation.*
+* **Port Assignments:** ![VLAN Assignments](images/vlan-assignments.png)
+  *Confirmed that FastEthernet 0/1 is actively assigned to the HR VLAN (10) and FastEthernet 0/3 is actively assigned to the IT VLAN (20).*
+
+### Testing Results (Layer 2 Isolation)
+* **Cross-VLAN Drop Test:** ![Failed Ping](images/ping-fail.png)
+  *Attempted a ping from HR-PC (192.168.10.2) to IT-PC (192.168.20.2). The ping timed out completely, validating that Layer 2 isolation is operating perfectly and devices cannot communicate across broadcast domains without a Layer 3 routing engine.*
+
+---
+
 ## Planned Labs
 - [x] Basic LAN
 - [x] Secure SOHO
 - [x] Enterprise Gateway
 - [x] Enterprise LAN/WAN
-- [ ] VLAN Segmentation
-- [ ] Router-on-a-Stick
+- [x] VLAN Segmentation
+- [ ] Router-on-a-Stick (Inter-VLAN Routing)
 - [ ] ACLs (Access Control Lists)
 - [ ] NAT/PAT
 - [ ] OSPF Routing
