@@ -63,7 +63,7 @@ This project addresses a flat corporate network domain by engineering Layer 2 ne
   * **Resolution:** Elevated privileges by executing the `enable` command to enter *Privileged Exec Mode* (`Switch#`), unlocking global configuration capabilities.
 
 * **Issue 2: VLAN Mappings Failed to Isolate Intended Devices**
-  * **Root Cause:** Misalignment between the assumed network topology design and actual physical layer cabling connections. The IT laptop was physically patched into interface `Fa0/2` and the Company Server into `Fa0/3`, mismatching the initial configuration script.
+  * **Root Cause:** Misalignment between the assumed network topology design and actual physical layer cabling connections. The IT laptop was physically patched into interface `Fa0/3` and the Company Server into `Fa0/1`, mismatching the initial configuration script.
   * **Resolution:** Executed `show mac address-table` on the switch CLI after generating host traffic to definitively map active MAC addresses to physical ingress ports. Updated the running configuration to bind interfaces `Fa0/1`, `Fa0/2`, and `Fa0/3` to their correct respective VLAN domains (10, 20, and 30) and updated network topology documentation for structural accuracy.
 
 ### Verification
