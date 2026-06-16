@@ -20,7 +20,7 @@ A collection of progressively advanced networking labs built in Cisco Packet Tra
 This lab connects a local office network to an ISP router, using a default route to give internal devices access to the public internet.
 
 ### Technologies Used
-- Cisco Packet Tracer / ISR 4331 Router / Catalyst 2960 Switch
+- Cisco Packet Tracer, Layer 2 Switching, Static Routing, Layer 3 Architecture, ICMP Troubleshooting
 - IPv4 Addressing & Subnetting
 - Static Routing (Gateway of Last Resort)
 - DHCP Services
