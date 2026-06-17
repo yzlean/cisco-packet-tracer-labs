@@ -161,6 +161,7 @@ Router(config)# ip nat inside source list 5 interface gig0/0/1 overload
 - **Result:** After an initial ARP/NAT timeout frame, continuous two-way ICMP communication was successfully established.
 - **Verification Proof:** ![Outbound Ping Success](images/nat-ping-success.png)
 
+
 #### 2. NAT Translation Table Inspection
 - **Command Executed:** Router# show ip nat translations
 - **Analysis:** The translation table explicitly captures the PAT engine altering packet headers on the fly. Private Inside Local IP sockets are mapped dynamically to the single public Inside Global WAN interface address (10.0.0.2), tracking individual connections via unique transport-layer identifier numbers.
