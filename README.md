@@ -1,284 +1,180 @@
 # Cisco Packet Tracer Networking Labs
 
-A structured collection of hands-on networking labs built in Cisco Packet Tracer while studying Computer Networking (AAS pathway). The progression demonstrates foundational to intermediate enterprise networking skills including switching, routing, VLAN segmentation, inter-VLAN routing, security enforcement, and NAT/PAT implementation.
-
-Each lab emphasizes three core skills:
-- Correct configuration of Cisco IOS features
-- Verification using show commands and ICMP testing
-- Root-cause troubleshooting and correction of real configuration issues
-
----
-
-## How to Use
-
-- Install Cisco Packet Tracer (compatible version 8.x recommended)
-- Clone or download this repository
-- Open `.pkt` files from the `labs/` directory
-- Review topology images and CLI configurations per lab
-
----
+A collection of progressively advanced networking labs built in Cisco Packet Tracer while studying Computer Networking.
 
 ## Lab Progression
 
 | Lab Project | Concepts Covered | Date Completed | Topology |
-| :--- | :--- | :--- |
-| **Basic LAN** | Static IP Addressing, Layer 2 Switching Fundamentals | June 2026 | [View](images/basic-lan-topology.png) |
-| **Secure SOHO** | Wireless Networking, DHCP Services | June 2026 | [View](images/secure-soho-topology.png) |
-| **Enterprise Gateway** | Default Gateway Design, Layer 3 Routing Fundamentals | June 2026 | [View](images/enterprise-gateway-topology.png) |
-| **Enterprise LAN/WAN** | ISP Connectivity, Static Routing, WAN Design | June 2026 | [View](images/enterprise-lan-wan-topology.png) |
-| **VLAN & Inter-VLAN Routing (ROAS)** | VLAN Segmentation, 802.1Q Trunking, Router-on-a-Stick | June 2026 | [View](images/roas-topology.png) |
-| **Access Control Lists (ACLs)** | Extended ACLs, Packet Filtering, Network Security Boundaries | June 2026 | [View](images/acl-topology.png) |
-| **Dynamic NAT / PAT** | NAT Overload, IPv4 Address Translation, Public/Private Boundaries | June 2026 | [View](images/nat-topology.png) |
+| :--- | :--- | :--- | :--- |
+| **Basic LAN** | Static IP, Layer 2 Switching | June 2026 | [View](images/basic-lan-topology.png) |
+| **Secure SOHO** | Wireless, DHCP | June 2026 | [View](images/secure-soho-topology.png) |
+| **Enterprise Gateway** | Default Gateways, L3 Routing | June 2026 | [View](images/enterprise-gateway-topology.png) |
+| **Enterprise LAN/WAN** | ISP Connectivity, Public Routing | June 2026 | [View](images/enterprise-lan-wan-topology.png) |
+| **VLAN & Inter-VLAN Routing** | 802.1Q Trunking, Sub-interfaces, ROAS | June 2026 | [View](images/roas-topology.png) |
+| **Access Control Lists (ACLs)** | Security Boundaries, Extended ACLs, Packet Filtering | June 2026 | [View](images/acl-topology.png) |
+| **Dynamic NAT / PAT** | NAT Overload, Private/Public Boundaries, Port Tracking | June 2026 | [View](images/nat-topology.png) |
 
 ---
 
-# Lab Spotlight: Enterprise LAN/WAN
+## Lab Spotlight: Enterprise LAN/WAN
 
-## Overview
-This lab connects a private enterprise LAN to an ISP network using a routed WAN link. It demonstrates static routing, default gateway design, and return-path routing requirements for full bidirectional connectivity.
+### Overview
+This lab connects a local office network to an ISP router, using a default route to give internal devices access to the public internet.
 
-## Technologies Used
-- Layer 2 Switching (LAN segmentation)
-- Layer 3 Routing (static routing, default route)
-- WAN transit subnet design
-- IPv4 subnetting and addressing
-- ICMP connectivity testing and validation
+### Technologies Used
+- **Network Architecture:** Layer 2 Switching, Layer 3 Architecture, WAN Transit Subnets
+- **Routing & Services:** Static Routing (Gateway of Last Resort), DHCP Services
+- **Protocols & Analysis:** IPv4 Subnetting, ICMP Troubleshooting
+- **Environment:** Cisco Packet Tracer, Cisco IOS CLI
 
-## Network Design Summary
-The enterprise LAN uses a private IPv4 network (192.168.1.0/24) connected to an edge router. The edge router forwards traffic to an ISP router via a WAN transit network. A default route is configured on the edge router to direct non-local traffic outward.
+### Troubleshooting Log
+- **Issue:** Devices inside the local network could not ping the ISP public server.
+  - **Root Cause:** Asymmetric routing occurred because the ISP router received packets but lacked a return route in its routing table for the local internal 192.168.1.0/24 subnet.
+  - **Resolution:** Added a static route (ip route 192.168.1.0 255.255.255.0 10.0.0.2) on the ISP router pointing back to the edge gateway to properly handle outbound return traffic.
 
-Bidirectional communication requires proper return routing from the ISP back to the internal network.
+### Verification
 
-## Troubleshooting Log
+#### EDGE-ROUTER
+- **Interface Status:** ![Interface Brief](images/edge-router-brief.png)
+  - Verified that all local LAN and WAN interfaces are up and assigned the correct IPs.
+- **Routing Table:** ![Routing Table](images/edge-router-route.png)
+  - Verified the default route (S*) is active and pointing traffic out to the ISP.
 
-### Issue
-Internal hosts were unable to reach external ISP resources using ICMP.
-
-### Root Cause
-The ISP router did not have a return route to the internal 192.168.1.0/24 network. This created asymmetric routing, where outbound traffic succeeded but return traffic was dropped.
-
-### Resolution
-A static route was added on the ISP router:
-
-ip route 192.168.1.0 255.255.255.0 10.0.0.2
-
-This restored proper bidirectional routing between the ISP and enterprise network.
-
-## Verification
-
-### EDGE ROUTER
-- Interface Status  
-  ![Interface Brief](images/edge-router-brief.png)  
-  All LAN and WAN interfaces are operational and correctly addressed.
-
-- Routing Table  
-  ![Routing Table](images/edge-router-route.png)  
-  Default route (S*) correctly points toward ISP gateway.
-
-### ISP ROUTER
-- Interface Status  
-  ![Interface Brief](images/isp-router-brief.png)  
-  WAN and transit interfaces are operational.
-
-- Routing Table  
-  ![Routing Table](images/isp-router-route.png)  
-  Static return route installed for 192.168.1.0/24 network.
-
-## Key Takeaway
-Always verify return-path routing when testing connectivity across networks—outbound reachability does not guarantee bidirectional communication.
+#### ISP-ROUTER
+- **Interface Status:** ![Interface Brief](images/isp-router-brief.png)
+  - Verified the public-facing and transit interfaces are operational.
+- **Routing Table:** ![Routing Table](images/isp-router-route.png)
+  - Verified the static return route to the internal network is active, ensuring two-way communication.
 
 ---
 
-# Lab Spotlight: VLAN Segmentation & Inter-VLAN Routing (ROAS)
+## Lab Spotlight: VLAN Segmentation & Inter-VLAN Routing (ROAS)
 
-## Overview
-This lab implements VLAN segmentation to isolate departmental broadcast domains (HR, IT, Server). Inter-VLAN routing is enabled using Router-on-a-Stick (ROAS) with 802.1Q trunking and router sub-interfaces.
+### Overview
+This lab isolates HR, IT, and Server devices into distinct logical subnets (VLANs 10, 20, and 30) on a single switch to limit broadcast domains. It then utilizes a single physical trunk link to an upstream router (Router-on-a-Stick) to enable controlled, routable communication between those subnets.
 
-## Technologies Used
-- VLAN segmentation (VLAN 10, 20, 30)
-- IEEE 802.1Q trunking
-- Router-on-a-Stick (ROAS)
-- Inter-VLAN routing
-- ARP resolution across VLAN boundaries
+### Technologies Used
+- **Network Architecture:** Layer 2 Switching, Broadcast Domain Isolation, 802.1Q Virtual Local Area Networks (VLANs)
+- **Routing & Services:** Router-on-a-Stick (Sub-interfaces), Inter-VLAN Routing
+- **Protocols & Analysis:** IPv4 Subnetting, ARP Resolution, ICMP Verification
+- **Environment:** Cisco Packet Tracer, Cisco IOS CLI
 
-## Network Design Summary
-A single Layer 2 switch separates traffic into VLANs for HR, IT, and Server departments. A trunk link connects the switch to a router, which performs inter-VLAN routing using logical sub-interfaces.
+### Troubleshooting Log
+- **Issue 1:** The show interface trunk command on the switch returned a completely blank output, and the link light between the switch and router remained red.
+  - **Root Cause:** Cisco router ports are turned off via the shutdown state by default from the factory. Because the upstream interface was completely inactive, the switch port entered a disabled/non-connecting state and refused to initialize trunking negotiated behavior.
+  - **Resolution:** Entered the router CLI and issued a no shutdown command on the physical interface to activate the link.
+- **Issue 2:** The router CLI rejected sub-interface setup commands with an %Invalid interface type and number error.
+  - **Root Cause:** Attempted to configure interface gig0/0.10, assuming standard 2911 interface naming conventions. The specific ISR router module installed uses a three-slot hardware mapping scheme (slot/subslot/port).
+  - **Resolution:** Executed show ip interface brief to reveal the exact hardware name format (GigabitEthernet0/0/0). Adjusted configuration inputs to reference gig0/0/0.10 successfully.
 
-## Troubleshooting Log
+### Verification
 
-### Issue 1: Trunk link not forming
-- `show interface trunk` returned no active trunk
-- Switch-to-router link remained down
+#### CORE-SWITCH
+- **Port Trunking Status:**
+  - Verified that Gig0/1 is successfully acting as an active 802.1Q trunk, allowing tagged frames from VLANs 10, 20, and 30 to pass up to the routing engine.
 
-#### Root Cause
-Router physical interface was administratively down by default, preventing trunk negotiation.
+#### EDGE-ROUTER
+- **Active Routing Table:**
+  - Confirmed that virtual sub-interfaces Gig0/0/0.10, Gig0/0/0.20, and Gig0/0/0.30 are recognized by the IOS kernel as directly connected (C) and serving as the valid gateway endpoints for their respective subnets.
 
-#### Resolution
-Enabled interface:
-
-no shutdown
-
----
-
-### Issue 2: Sub-interface configuration failure
-- Error: invalid interface type/number
-
-#### Root Cause
-Incorrect interface naming was used (platform-specific IOS used GigabitEthernet0/0/0 instead of expected format).
-
-#### Resolution
-Verified interface structure using:
-
-show ip interface brief
-
-Then configured sub-interfaces under correct physical interface.
+### Testing Results (Cross-VLAN Verification)
+- **Successful Inter-VLAN Routing:** ![Ping Test](images/ping-test.png)
+  - Executed cross-subnet diagnostic pings from HR-DESKTOP (192.168.10.2) to IT-LAPTOP (192.168.20.2) and COMPANY-SERVER (192.168.30.10). Initial packet drops occurred normally due to standard ARP resolution, followed by 100% continuous ICMP success responses routed via the sub-interfaces.
 
 ---
 
-## Verification
+## Lab Spotlight: Access Control Lists (ACLs) & Network Security
 
-### CORE SWITCH
-- Trunk Port Status  
-  GigabitEthernet0/1 operating as an active 802.1Q trunk carrying VLANs 10, 20, and 30.
+### Overview
+This lab implements network security boundaries at the distribution layer. Using an Extended Access Control List (ACL) applied at the Layer 3 boundary, the network blocks unauthorized lateral movement between departmental subnets while preserving necessary access to shared company resources.
 
-### EDGE ROUTER
-- Routing Table  
-  Sub-interfaces (G0/0/0.10, .20, .30) installed as directly connected networks.
+### Technologies Used
+- **Network Architecture:** Layer 3 Security Boundaries, Subnet Isolation
+- **Routing & Services:** Extended Access Control Lists (ACLs), Inbound Traffic Filtering
+- **Protocols & Analysis:** Wildcard Masking, ICMP Inspection, Packet Filtering
+- **Environment:** Cisco Packet Tracer, Cisco IOS CLI
 
-## Connectivity Testing
+### Security Policies & Implementation
+- **Policy:** Deny all traffic from VLAN 10 (HR) to VLAN 20 (IT) while preserving access to shared corporate resources hosted in VLAN 30 (Server Network).
+- **Implementation:** An Extended IP Access List named BLOCK_HR_TO_IT was created and applied inbound on the HR VLAN 10 gateway interface (GigabitEthernet0/0/0.10). The ACL was applied inbound on the HR VLAN gateway (G0/0/0.10) so unauthorized traffic is filtered before being routed to other VLANs.
 
-- HR (192.168.10.2) → IT (192.168.20.2): Success  
-- HR (192.168.10.2) → Server (192.168.30.10): Success  
-- IT (192.168.20.2) → Server (192.168.30.10): Success  
+EDGE-ROUTER# show access-lists
+Extended IP access list BLOCK_HR_TO_IT
+    10 deny ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
+    20 permit ip any any
 
-Initial ARP resolution delays were observed, followed by stable ICMP connectivity.
+### Troubleshooting Log
+- **Issue:** The initial implementation failed, and HR devices were still able to ping the IT subnet successfully.
+  - **Root Cause:** A standard subnet mask (255.255.255.0) was mistakenly entered instead of an inverse wildcard mask (0.0.0.255). Because Cisco IOS ACLs rely strictly on wildcard bits to define matching criteria, the engine misparsed the statement, leaving the traffic un-matched and un-blocked.
+  - **Resolution:** Removed the misconfigured entry using no 10 inside the ACL sub-configuration menu and re-entered the statement using the proper inverse wildcard bits (0.0.0.255).
 
-## Key Takeaway
-Always verify physical interface state and platform-specific interface naming before configuring ROAS sub-interfaces.
+### Verification & Validation
 
----
+#### Test 1: HR Desktop (192.168.10.2) -> IT Laptop (192.168.20.2)
+- **Requirement:** HR users must not access IT devices.
+- **Actual Result:** Failed (Returned Destination host unreachable from gateway).
+- **Verification Proof:** ![HR to IT Failed Ping](images/acl-ping-fail.png)
 
-# Lab Spotlight: Access Control Lists (ACLs) & Network Security
+#### Test 2: HR Desktop (192.168.10.2) -> Company Server (192.168.30.10)
+- **Requirement:** HR users may access the company server.
+- **Actual Result:** Success (100% ICMP echo replies received).
 
-## Overview
-This lab implements Layer 3 security using an Extended ACL to enforce departmental communication rules while preserving access to shared services.
-
-## Technologies Used
-- Extended ACL design and implementation
-- Layer 3 packet filtering
-- Security policy enforcement
-- Wildcard masking logic
-- Least-privilege network design
-
-## Security Policy
-- HR (VLAN 10) is denied access to IT (VLAN 20)
-- HR is permitted access to Server network (VLAN 30)
-- All other traffic is permitted by default
-
-## ACL Implementation
-
-Applied inbound on HR gateway interface:
-
-access-list 5 deny ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255  
-access-list 5 permit ip any any  
-
-## Troubleshooting Log
-
-### Issue
-HR devices were still able to reach IT subnet after ACL deployment.
-
-### Root Cause
-Incorrect wildcard mask usage (standard subnet mask used instead of inverse wildcard mask), causing ACL mismatch and ineffective filtering.
-
-### Resolution
-Correct wildcard mask:
-
-0.0.0.255
-
-ACL rebuilt and applied successfully.
-
-## Verification
-
-### Test 1: HR → IT (Blocked)
-Source: 192.168.10.2 → 192.168.20.2  
-Result: Blocked (expected behavior)
-
-![HR to IT Failed Ping](images/acl-ping-fail.png)
-
-### Test 2: HR → Server (Allowed)
-Result: Successful ICMP connectivity
-
-### Test 3: IT → Server (Allowed)
-Result: Successful ICMP connectivity
-
-## Key Takeaway
-ACL behavior is strictly dependent on wildcard mask logic—small syntax errors can completely invalidate security policy enforcement.
+#### Test 3: IT Laptop (192.168.20.2) -> Company Server (192.168.30.10)
+- **Requirement:** IT users may access the company server.
+- **Actual Result:** Success (100% ICMP echo replies received).
 
 ---
 
-# Lab Spotlight: Dynamic NAT / PAT
+## Lab Spotlight: Dynamic NAT with Port Address Translation (PAT)
 
-## Overview
-This lab implements NAT Overload (PAT) to allow multiple internal VLANs to share a single public IPv4 address. This demonstrates IPv4 conservation and real-world enterprise edge translation behavior.
+### Overview
+This lab expands the enterprise edge architecture by bridging the gap between private internal networks and the public internet. Implementing Port Address Translation (PAT / NAT Overload) allows multiple distinct internal VLAN subnets to securely share a single public-facing WAN IP address, conserving IPv4 address space while ensuring external connectivity.
 
-## Technologies Used
-- NAT (Network Address Translation)
-- PAT (Port Address Translation / overload)
-- Inside/Outside NAT interface design
-- IPv4 public/private boundary handling
-- Transport-layer port tracking
+### Technologies Used
+- **Network Architecture:** Enterprise Edge Topology, Public/Private Boundaries, WAN Transit Subnets
+- **Routing & Services:** Dynamic NAT, Port Address Translation (NAT Overload), Interface Mapping
+- **Protocols & Analysis:** Transport Layer Port Tracking, ICMP Header Inspection, RFC 1918 IPv4 Traversal
+- **Environment:** Cisco Packet Tracer, Cisco IOS CLI
 
-## Network Design Summary
-Internal VLAN sub-interfaces are configured as NAT inside interfaces, while the WAN interface is configured as NAT outside. Traffic from private networks is translated dynamically to a single public IP using port-level differentiation.
+### Implementation
+To deploy PAT over the existing Inter-VLAN environment, internal sub-interfaces were designated as translation entry points, and the physical WAN port was designated as the exit boundary. A standard access list targets traffic originating from internal subnets for translation over the public interface.
 
-## Implementation
+Router# configure terminal
+Router(config)# interface gig0/0/0.10
+Router(config-subif)# ip nat inside
+Router(config-subif)# interface gig0/0/0.20
+Router(config-subif)# ip nat inside
+Router(config-subif)# interface gig0/0/0.30
+Router(config-subif)# ip nat inside
+Router(config-subif)# exit
+Router(config)# interface gig0/0/1
+Router(config-if)# ip nat outside
+Router(config-if)# exit
+Router(config)# access-list 5 permit 192.168.10.0 0.0.0.255
+Router(config)# access-list 5 permit 192.168.20.0 0.0.0.255
+Router(config)# ip nat inside source list 5 interface gig0/0/1 overload
 
-interface gig0/0/0.10  
- ip nat inside  
-interface gig0/0/0.20  
- ip nat inside  
-interface gig0/0/0.30  
- ip nat inside  
+### Verification & Validation
 
-interface gig0/0/0.1  
- ip nat outside  
+#### 1. Outbound Internet Connectivity Verification
+- **Test:** A diagnostic ping was initiated from HR-DESKTOP (192.168.10.2) across the edge boundary to the public ISP Gateway interface (10.0.0.1).
+- **Result:** After an initial ARP/NAT timeout frame, continuous two-way ICMP communication was successfully established.
+- **Verification Proof:** ![Outbound Ping Success](images/nat-ping-success.png)
 
-access-list 5 permit 192.168.10.0 0.0.0.255  
-access-list 5 permit 192.168.20.0 0.0.0.255  
-
-ip nat inside source list 5 interface gig0/0/0.1 overload  
-
-## Verification
-
-### Connectivity Test
-HR workstation successfully reached external ISP gateway after NAT translation.
-
-![Outbound Ping Success](images/nat-ping-success.png)
-
----
-
-### NAT Translation Table
-Command:
-
-show ip nat translations
-
-Verified multiple internal hosts sharing a single public IP via unique port mappings.
-
-![NAT Table Mappings](images/nat-translations.png)
-
-## Key Takeaway
-PAT enables scalable outbound connectivity by combining IP address translation with transport-layer port tracking.
+#### 2. NAT Translation Table Inspection
+- **Command Executed:** Router# show ip nat translations
+- **Analysis:** The translation table explicitly captures the PAT engine altering packet headers on the fly. Private Inside Local IP sockets are mapped dynamically to the single public Inside Global WAN interface address (10.0.0.2), tracking individual connections via unique transport-layer identifier numbers.
+- **Verification Proof:** ![NAT Table Mappings](images/nat-translations.png)
 
 ---
 
-# Planned Labs
-
-- [x] Basic LAN  
-- [x] Secure SOHO  
-- [x] Enterprise Gateway  
-- [x] Enterprise LAN/WAN  
-- [x] VLAN Segmentation & ROAS  
-- [x] ACLs  
-- [x] NAT / PAT  
-- [ ] OSPF Routing  
-- [ ] Port Security  
+## Planned Labs
+- [x] Basic LAN
+- [x] Secure SOHO
+- [x] Enterprise Gateway
+- [x] Enterprise LAN/WAN
+- [x] VLAN Segmentation & Router-on-a-Stick
+- [x] Access Control Lists (ACLs)
+- [x] Dynamic NAT / PAT
+- [ ] OSPF Routing
+- [ ] Port Security
