@@ -94,9 +94,9 @@ This lab implements network security boundaries at the distribution layer. Using
 - **Environment:** Cisco Packet Tracer, Cisco IOS CLI
 
 ### Security Policies & Implementation
-- **Requirement 1:** HR users must not access IT devices.
-- **Requirement 2:** HR users must retain access to the company server.
-- **Implementation:** An Extended IP Access List named `BLOCK_HR_TO_IT` was created and applied **inbound** on the HR VLAN 10 gateway interface (`GigabitEthernet0/0/0.10`). The ACL was applied inbound on the HR VLAN gateway (G0/0/0.10) so unauthorized traffic is filtered before being routed to other VLANs.
+- **Policy:** Deny all traffic from VLAN 10 (HR) to VLAN 20 (IT) while preserving access to shared corporate resources hosted in VLAN 30 (Server Network).
+
+- **Implementation:** An Extended IP Access List named `BLOCK_HR_TO_IT` was created and applied **inbound** on the HR VLAN 10 gateway interface (`GigabitEthernet0/0/0.10`). The ACL was applied inbound on the HR VLAN gateway (`G0/0/0.10`) so unauthorized traffic is filtered before being routed to other VLANs.
 
     EDGE-ROUTER# show access-lists
     Extended IP access list BLOCK_HR_TO_IT
@@ -105,7 +105,7 @@ This lab implements network security boundaries at the distribution layer. Using
 
 ### Troubleshooting Log
 - **Issue:** The initial implementation failed, and HR devices were still able to ping the IT subnet successfully.
-  - **Root Cause:** A standard subnet mask (`255.255.255.0`) was mistakenly entered instead of an inverse wildcard mask (`0.0.0.255`). The Cisco IOS parsing engine inverted the entry, translating the rule destination network statement to `0.0.0.0`, leaving the actual traffic un-matched and un-blocked.
+  - **Root Cause:** A standard subnet mask (`255.255.255.0`) was mistakenly entered instead of a wildcard mask (`0.0.0.255`). Because ACLs use wildcard masks to define matching criteria, the rule did not correctly match traffic between the HR and IT subnets and therefore failed to block the intended packets.
   - **Resolution:** Removed the misconfigured entry using `no 10` inside the ACL sub-configuration menu and re-entered the statement using the proper inverse wildcard bits (`0.0.0.255`).
 
 ### Verification & Validation
