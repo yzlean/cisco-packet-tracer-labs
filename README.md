@@ -12,6 +12,7 @@ Focus areas include:
 - Network security policies (ACLs)
 - WAN connectivity and routing behavior
 - IPv4 address translation (NAT/PAT)
+- Dynamic routing and link-state protocols (OSPF)
 
 ## Lab Progression
 
