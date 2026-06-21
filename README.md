@@ -271,7 +271,7 @@ This build surfaced the largest number of distinct, real configuration issues of
   - **Resolution:** Set the test PC's default gateway to the ISP router's interface address.
 
 - **Issue 7: An unsolicited ping from the outside test PC into the internal network was refused by the firewall.**
-  - **Root Cause:** Initially mistaken for a bug — investigation confirmed this was correct, intentional behavior. The `OUTSIDE_IN` ACL only permits ICMP echo-*replies* (responses to internally-initiated pings), not fresh inbound echo-*requests*. This is the expected default-deny posture of an edge firewall.
+  - **Root Cause:** Initially mistaken for a bug, investigation confirmed this was correct, intentional behavior. The `OUTSIDE_IN` ACL only permits ICMP echo-*replies* (responses to internally-initiated pings), not fresh inbound echo-*requests*. This is the expected default-deny posture of an edge firewall.
   - **Resolution:** No fix needed; documented as a successful security validation rather than a defect.
 
 - **Issue 8: Outside PC could not load the internal web server's page via the firewall's public IP — connection was reset.**
