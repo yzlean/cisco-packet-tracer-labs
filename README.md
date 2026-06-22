@@ -2,6 +2,8 @@
 
 A collection of progressively advanced networking labs built in Cisco Packet Tracer while studying Computer Networking.
 
+![Cisco IOS](https://img.shields.io/badge/Cisco-IOS-blue)
+
 ## 📡 Network Simulation Portfolio
 
 A hands-on networking lab series simulating small-to-medium enterprise network environments using Cisco Packet Tracer.
